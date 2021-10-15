@@ -21,7 +21,7 @@ describe('Create Statement Use Case', () => {
     createStatementUseCase = new CreateStatementUseCase(usersRepositoryInMemory, statementsRepositoryInMemory)
   })
 
-  it('should be able to create a new statement DEPOSIT', async () => {
+  it('should be able to create a new deposit statement', async () => {
     const user = await usersRepositoryInMemory.create({
       name: 'Test Create Statement DEPOSIT',
       email: 'test@create.statement.deposit',
@@ -38,7 +38,7 @@ describe('Create Statement Use Case', () => {
     expect(statement.description).toEqual('deposit');
   })
 
-  it('should be able to create a new statement WITHDRAW', async () => {
+  it('should be able to create a new withdraw statement', async () => {
     const user = await usersRepositoryInMemory.create({
       name: 'Test Create Statement WITHDRAW',
       email: 'test@create.statement.withdraw',

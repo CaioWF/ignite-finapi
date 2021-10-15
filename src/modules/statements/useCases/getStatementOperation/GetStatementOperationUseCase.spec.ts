@@ -41,7 +41,7 @@ describe('Get Statement Operation Use Case', () => {
     expect(statementOperation.description).toEqual('deposit');
   })
 
-  it('should not be able to get a statement operation when user nonexists', async () => {
+  it('should not be able to get a statement operation when statement nonexists', async () => {
     expect(async () => {
       const user = await usersRepositoryInMemory.create({
         name: 'Test Get Operation Error',
