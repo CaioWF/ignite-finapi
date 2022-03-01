@@ -29,11 +29,11 @@ describe("Get Balance Use Case", () => {
     });
 
     await statementsRepositoryInMemory.create({
-      user_id: user.id, type: OperationType.DEPOSIT, amount: 10.5, description: 'deposit'
+      user_id: user.id, type: OperationType.DEPOSIT, amount: 10.5, description: 'deposit', sender_id: null
     })
 
     await statementsRepositoryInMemory.create({
-      user_id: user.id, type: OperationType.WITHDRAW, amount: 9, description: 'withdraw'
+      user_id: user.id, type: OperationType.WITHDRAW, amount: 9, description: 'withdraw', sender_id: null
     })
 
     const userBalance = await getBalanceUseCase.execute({ user_id: user.id })

@@ -29,7 +29,7 @@ describe('Create Statement Use Case', () => {
     });
 
     const statement = await createStatementUseCase.execute({
-      user_id: user.id, type: OperationType.DEPOSIT, amount: 10.5, description: 'deposit'
+      user_id: user.id, type: OperationType.DEPOSIT, amount: 10.5, description: 'deposit', sender_id: null
     })
 
     expect(statement).toHaveProperty('id');
@@ -46,11 +46,11 @@ describe('Create Statement Use Case', () => {
     });
 
     await createStatementUseCase.execute({
-      user_id: user.id, type: OperationType.DEPOSIT, amount: 10.5, description: 'deposit'
+      user_id: user.id, type: OperationType.DEPOSIT, amount: 10.5, description: 'deposit', sender_id: null
     })
 
     const statement = await createStatementUseCase.execute({
-      user_id: user.id, type: OperationType.WITHDRAW, amount: 9.5, description: 'withdraw'
+      user_id: user.id, type: OperationType.WITHDRAW, amount: 9.5, description: 'withdraw', sender_id: null
     })
 
     expect(statement).toHaveProperty('id');
@@ -62,7 +62,7 @@ describe('Create Statement Use Case', () => {
   it('should not be able to create a new statement when user nonexists', async () => {
     expect(async () => {
       await createStatementUseCase.execute({
-        user_id: 'nonexistent', type: OperationType.DEPOSIT, amount: 10.5, description: 'deposit'
+        user_id: 'nonexistent', type: OperationType.DEPOSIT, amount: 10.5, description: 'deposit', sender_id: null
       })
     }).rejects.toBeInstanceOf(CreateStatementError.UserNotFound)
   })
@@ -76,7 +76,7 @@ describe('Create Statement Use Case', () => {
       });
 
       await createStatementUseCase.execute({
-        user_id: user.id, type: OperationType.WITHDRAW, amount: 9.5, description: 'withdraw'
+        user_id: user.id, type: OperationType.WITHDRAW, amount: 9.5, description: 'withdraw', sender_id: null
       })
     }).rejects.toBeInstanceOf(CreateStatementError.InsufficientFunds)
   })

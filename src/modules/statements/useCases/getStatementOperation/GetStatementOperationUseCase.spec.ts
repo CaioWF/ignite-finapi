@@ -29,7 +29,7 @@ describe('Get Statement Operation Use Case', () => {
     });
 
     const statement = await statementsRepositoryInMemory.create({
-      user_id: user.id, type: OperationType.DEPOSIT, amount: 10.5, description: 'deposit'
+      user_id: user.id, type: OperationType.DEPOSIT, amount: 10.5, description: 'deposit', sender_id: null
     })
 
     const statementOperation = await getStatementOperationUseCase.execute({ user_id: user.id, statement_id: statement.id })
