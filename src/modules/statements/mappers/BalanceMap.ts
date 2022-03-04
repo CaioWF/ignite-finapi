@@ -7,10 +7,11 @@ export class BalanceMap {
       amount,
       description,
       type,
+      sender_id,
       created_at,
       updated_at
-    }) => (
-      {
+    }) => {
+      const mappedValue = {
         id,
         amount: Number(amount),
         description,
@@ -18,7 +19,12 @@ export class BalanceMap {
         created_at,
         updated_at
       }
-    ));
+
+      if(sender_id) return {...mappedValue, sender_id};
+
+      return mappedValue;
+    }
+    );
 
     return {
       statement: parsedStatement,
