@@ -12,6 +12,7 @@ let createStatementUseCase: CreateStatementUseCase;
 enum OperationType {
   DEPOSIT = 'deposit',
   WITHDRAW = 'withdraw',
+  TRANSFER = 'transfer',
 }
 
 describe('Create Statement Use Case', () => {
@@ -57,6 +58,35 @@ describe('Create Statement Use Case', () => {
     expect(statement.type).toEqual(OperationType.WITHDRAW);
     expect(statement.amount).toEqual(9.5);
     expect(statement.description).toEqual('withdraw');
+  })
+
+  it('should be able to create a new transfer statement', async () => {
+    const user = await usersRepositoryInMemory.create({
+      name: 'Test Create Statement TRANSFER',
+      email: 'test@create.statement.transfer',
+      password: 'test'
+    });
+
+    const userReceiver = await usersRepositoryInMemory.create({
+      name: 'Test Create Statement TRANSFER Receive',
+      email: 'test@create.statement.transfer.receive',
+      password: 'test'
+    });
+
+    await createStatementUseCase.execute({
+      user_id: user.id, type: OperationType.DEPOSIT, amount: 10.5, description: 'deposit', sender_id: null
+    })
+
+    const statement = await createStatementUseCase.execute({
+      user_id: user.id, type: OperationType.TRANSFER, amount: 9.5, description: 'transfer', sender_id: user.id
+    })
+
+    expect(statement).toHaveProperty('id');
+    expect(statement.type).toEqual(OperationType.TRANSFER);
+    expect(statement.amount).toEqual(9.5);
+    expect(statement.description).toEqual('transfer');
+    expect(statement.user_id).toEqual(user.id)
+    expect(statement.sender_id).toEqual(user.id)
   })
 
   it('should not be able to create a new statement when user nonexists', async () => {

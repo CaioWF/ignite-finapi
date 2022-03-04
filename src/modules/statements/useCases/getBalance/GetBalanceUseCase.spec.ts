@@ -12,6 +12,7 @@ let getBalanceUseCase: GetBalanceUseCase;
 enum OperationType {
   DEPOSIT = 'deposit',
   WITHDRAW = 'withdraw',
+  TRANSFER = 'transfer'
 }
 
 describe("Get Balance Use Case", () => {
@@ -28,20 +29,41 @@ describe("Get Balance Use Case", () => {
       password: 'test'
     });
 
+    const userToReceive = await usersRepositoryInMemory.create({
+      name: 'Test Get Balance Transfer',
+      email: 'test@get.balance.transfer',
+      password: 'test'
+    });
+
     await statementsRepositoryInMemory.create({
-      user_id: user.id, type: OperationType.DEPOSIT, amount: 10.5, description: 'deposit', sender_id: null
+      user_id: user.id, type: OperationType.DEPOSIT, amount: 20.5, description: 'deposit', sender_id: null
     })
 
     await statementsRepositoryInMemory.create({
       user_id: user.id, type: OperationType.WITHDRAW, amount: 9, description: 'withdraw', sender_id: null
     })
 
+    await statementsRepositoryInMemory.create({
+      user_id: user.id, type: OperationType.TRANSFER, amount: 9, description: 'transfer', sender_id: user.id
+    })
+
     const userBalance = await getBalanceUseCase.execute({ user_id: user.id })
 
     expect(userBalance).toHaveProperty('statement');
     expect(userBalance).toHaveProperty('balance');
-    expect(userBalance.statement.length).toEqual(2);
-    expect(userBalance.balance).toEqual(1.5);
+    expect(userBalance.statement.length).toEqual(3);
+    expect(userBalance.balance).toEqual(2.5);
+
+    await statementsRepositoryInMemory.create({
+      user_id: userToReceive.id, type: OperationType.TRANSFER, amount: 9, description: 'transfer', sender_id: user.id
+    })
+
+    const userReceiveBalance = await getBalanceUseCase.execute({ user_id: userToReceive.id })
+
+    expect(userReceiveBalance).toHaveProperty('statement');
+    expect(userReceiveBalance).toHaveProperty('balance');
+    expect(userReceiveBalance.statement.length).toEqual(1);
+    expect(userReceiveBalance.balance).toEqual(9);
   })
 
   it('should not be able to get a balance when user nonexists', async () => {
